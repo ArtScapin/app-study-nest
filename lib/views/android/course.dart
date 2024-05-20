@@ -1,5 +1,6 @@
 import 'package:app_study_nest/models/course_model.dart';
 import 'package:app_study_nest/views/android/courses.dart';
+import 'package:app_study_nest/views/android/lesson.dart';
 import 'package:app_study_nest/views/android/login.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -204,6 +205,7 @@ class _CourseScreenState extends State<CourseScreen> {
                 const SizedBox(height: 20),
                 Text(
                   course.description,
+                  textAlign: TextAlign.justify,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -212,7 +214,14 @@ class _CourseScreenState extends State<CourseScreen> {
                 const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      courseInFocus = course;
+                      lessonInFocus = lessons[0];
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LessonScreen()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF1B6040),
                       shape: RoundedRectangleBorder(
