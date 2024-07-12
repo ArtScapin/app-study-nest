@@ -17,13 +17,16 @@ class CoursesScreen extends StatefulWidget {
 
 class _CoursesScreenState extends State<CoursesScreen> {
   List<Course> courses = [];
+  List<Course> filteredCourses = [];
   bool isLoading = true;
+  TextEditingController searchController = TextEditingController(); // Controlador da barra de busca
 
   @override
   void initState() {
     courseInFocus = null;
     super.initState();
     fetchCourses();
+    searchController.addListener(_filterCourses); // Listener para a barra de busca
   }
 
   Future<void> fetchCourses() async {
@@ -40,6 +43,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
         List<dynamic> data = jsonDecode(response.body);
         setState(() {
           courses = data.map((json) => Course.fromJson(json)).toList();
+          filteredCourses = courses; // Inicializa a lista filtrada com todos os cursos
           isLoading = false;
         });
       } else {
@@ -50,6 +54,16 @@ class _CoursesScreenState extends State<CoursesScreen> {
         isLoading = false;
       });
     }
+  }
+
+  void _filterCourses() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredCourses = courses.where((course) {
+        return course.name.toLowerCase().contains(query) ||
+            course.user.username.toLowerCase().contains(query);
+      }).toList();
+    });
   }
 
   @override
@@ -65,7 +79,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
               Image.asset(
                 'assets/logo-simple.png',
                 height: 40,
-              ),// E
+              ),
             ],
           ),
           backgroundColor: const Color(0xFF181D19),
@@ -105,14 +119,14 @@ class _CoursesScreenState extends State<CoursesScreen> {
                 ),
                 const PopupMenuItem<String>(
                   value: 'Courses',
-                  child:  Text(
+                  child: Text(
                     'Courses',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
                 const PopupMenuItem<String>(
                   value: 'Logout',
-                  child:  Text(
+                  child: Text(
                     'Logout',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -124,97 +138,126 @@ class _CoursesScreenState extends State<CoursesScreen> {
         backgroundColor: const Color(0xFF101511),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-          itemCount: courses.length,
-          itemBuilder: (context, index) {
-            final course = courses[index];
-            return InkWell(
-              onTap: () {
-                courseInFocus = course;
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const CourseScreen()
-                ));
-              },
-              child: Card(
-                margin: const EdgeInsets.all(10),
-                color: const Color(0xFF101511),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.black,
-                            image: DecorationImage(
-                              image: NetworkImage('$apiUrl/thumbnail/${course.thumbnail}'),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        course.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              const Icon(
-                                Icons.star,
-                                color: Color(0xFF04F781),
-                              ),
-                              const SizedBox(width: 5),
-                              const Text(
-                                '??',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              const SizedBox(width: 15),
-                              const Icon(
-                                Icons.video_collection_rounded,
-                                color: Color(0xFF04F781),
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                '${course.lessons.length}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text('@${course.user.username}',
-                            style: const TextStyle(
-                              color: Color(0xFF26AB70),
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+            : Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search courses...',
+                  prefixIcon: const Icon(Icons.search, color: Color(0xFF26AB70)),
+                  filled: true,
+                  fillColor: const Color(0xFF181D19),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  hintStyle: const TextStyle(color: Colors.grey),
                 ),
+                style: const TextStyle(color: Colors.white),
               ),
-            );
-          },
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredCourses.length,
+                itemBuilder: (context, index) {
+                  final course = filteredCourses[index];
+                  return InkWell(
+                    onTap: () {
+                      courseInFocus = course;
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const CourseScreen()
+                      ));
+                    },
+                    child: Card(
+                      margin: const EdgeInsets.all(10),
+                      color: const Color(0xFF101511),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.black,
+                                  image: DecorationImage(
+                                    image: NetworkImage('$apiUrl/thumbnail/${course.thumbnail}'),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              course.name,
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    const Icon(
+                                      Icons.star,
+                                      color: Color(0xFF04F781),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    const Text(
+                                      '??',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                    const SizedBox(width: 15),
+                                    const Icon(
+                                      Icons.video_collection_rounded,
+                                      color: Color(0xFF04F781),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      '${course.lessons.length}',
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text('@${course.user.username}',
+                                  style: const TextStyle(
+                                      color: Color(0xFF26AB70),
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 }
 
