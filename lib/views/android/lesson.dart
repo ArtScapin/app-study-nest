@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_study_nest/views/android/courses.dart';
+import 'package:app_study_nest/views/android/home.dart';
 import 'package:app_study_nest/views/android/login.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -128,7 +129,7 @@ class _LessonScreenState extends State<LessonScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const CoursesScreen()),
+                        builder: (context) => const HomeScreen()),
                   );
                   break;
                 case 'Courses':

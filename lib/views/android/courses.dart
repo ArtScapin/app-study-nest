@@ -1,5 +1,6 @@
 import 'package:app_study_nest/models/course_model.dart';
 import 'package:app_study_nest/views/android/course.dart';
+import 'package:app_study_nest/views/android/home.dart';
 import 'package:app_study_nest/views/android/login.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -91,7 +92,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
                   case 'Home':
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const CoursesScreen()),
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
                     );
                     break;
                   case 'Courses':
