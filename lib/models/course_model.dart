@@ -67,6 +67,7 @@ class Lesson {
   final String description;
   final String video;
   final int order;
+  final List<Comment> comments;
 
   Lesson({
     required this.id,
@@ -74,15 +75,42 @@ class Lesson {
     required this.description,
     required this.video,
     required this.order,
+    required this.comments
   });
 
   factory Lesson.fromJson(Map<String, dynamic> json) {
+    var commentsFromJson = json['comments'] as List?;
+    List<Comment> commentList = commentsFromJson != null
+        ? commentsFromJson.map((i) => Comment.fromJson(i)).toList()
+        : [];
+
     return Lesson(
       id: json['id'],
       name: json['name'],
       description: json['description'],
       video: json['video'],
       order: json['order'],
+      comments: commentList
+    );
+  }
+}
+
+class Comment {
+  final int id;
+  final String text;
+  final User user;
+
+  Comment({
+    required this.id,
+    required this.text,
+    required this.user,
+  });
+
+  factory Comment.fromJson(Map<String, dynamic> json) {
+    return Comment(
+      id: json['id'],
+      text: json['text'],
+      user: User.fromJson(json['user']),
     );
   }
 }
