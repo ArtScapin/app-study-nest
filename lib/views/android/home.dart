@@ -19,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Course> courses = [];
   bool isLoading = true;
+  final List<int> activityData = [0, 2, 3, 2, 0, 1, 5];
 
   @override
   void initState() {
@@ -127,17 +128,83 @@ class _HomeScreenState extends State<HomeScreen> {
             ? const Center(child: CircularProgressIndicator())
             : ListView(
           children: [
-            ActivityGraph(),
-            const SizedBox(height: 20),
-            const Center(
-              child: Text(
-                'Popular Courses',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFF101511),
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: Column(
+                children: [
+                  const Center(
+                    child: Text(
+                      'Activity Graph',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: List.generate(activityData.length, (index) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            height: activityData[index] * 10.0, // Altura da barra
+                            width: 20,
+                            decoration: BoxDecoration(
+                              color: index == 6 ? const Color(0xFF04F781) : Colors.grey,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            ['S', 'S', 'M', 'T', 'W', 'T', 'F'][index],
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    'Popular Courses',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CoursesScreen()),
+                    );
+                  },
+                  child: const Text(
+                    'View All',
+                    style: TextStyle(
+                      color: Color(0xFF04F781),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
             ...courses.map((course) => InkWell(
               onTap: () {
@@ -221,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-            )).toList(),
+            )),
           ],
         ),
       ),
@@ -232,58 +299,3 @@ class _HomeScreenState extends State<HomeScreen> {
 void main() {
   runApp(const HomeScreen());
 }
-
-class ActivityGraph extends StatelessWidget {
-  final List<int> activityData = [0, 2, 3, 2, 0, 1, 5]; // Dados de exemplo
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: const Color(0xFF101511),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        children: [
-          const Center(
-            child: Text(
-              'Activity Graph',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: List.generate(activityData.length, (index) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: activityData[index] * 10.0, // Altura da barra
-                    width: 20,
-                    decoration: BoxDecoration(
-                      color: index == 6 ? const Color(0xFF04F781) : Colors.grey,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    [ 'S', 'S', 'M', 'T', 'W', 'T', 'F'][index],
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
