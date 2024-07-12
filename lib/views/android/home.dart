@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const SizedBox(width: 5),
                               const Text(
-                                '??',
+                                '5.0',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold

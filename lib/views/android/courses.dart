@@ -212,7 +212,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                     ),
                                     const SizedBox(width: 5),
                                     const Text(
-                                      '??',
+                                      '5.0',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold
