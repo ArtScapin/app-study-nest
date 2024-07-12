@@ -133,117 +133,126 @@ class _LessonScreenState extends State<LessonScreen> {
       ),
       backgroundColor: const Color(0xFF101511),
       body: YoutubePlayerBuilder(
-        player: YoutubePlayer(
-          controller: _youtubeController,
-          showVideoProgressIndicator: true,
-          progressIndicatorColor: Colors.amber,
-          progressColors: const ProgressBarColors(
-            playedColor: Colors.amber,
-            handleColor: Colors.amberAccent,
-          ),
-        ),
-        builder: (context, player) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                player,
-                if (!isFullScreen) ...[
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Text(
-                          lessonInFocus!.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          lessonInFocus!.description,
-                          textAlign: TextAlign.justify,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: courseInFocus!.lessons.length + 1,
-                                itemBuilder: (context, index) {
-                                  if (index == 0) {
-                                    return Container(
-                                      color: const Color(0xFF181D19),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                'Lessons',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }
-
-                                  final lesson = courseInFocus!.lessons[index - 1];
-                                  final isEvenRow = (index - 1) % 2 == 0;
-
-                                  return Container(
-                                    color: isEvenRow
-                                        ? const Color(0xFF393E3A)
-                                        : const Color(0xFF181D19),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              lesson.name,
-                                              style: const TextStyle(color: Colors.white),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
+            player: YoutubePlayer(
+              controller: _youtubeController,
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: Colors.amber,
+              progressColors: const ProgressBarColors(
+                playedColor: Colors.amber,
+                handleColor: Colors.amberAccent,
+              ),
+            ),
+            builder: (context, player) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    player,
+                    if (!isFullScreen) ...[
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Text(
+                              lessonInFocus!.name,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
-                          ),
+                            const SizedBox(height: 10),
+                            Text(
+                              lessonInFocus!.description,
+                              textAlign: TextAlign.justify,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Center(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: courseInFocus!.lessons.length + 1,
+                                    itemBuilder: (context, index) {
+                                      if (index == 0) {
+                                        return Container(
+                                          color: const Color(0xFF181D19),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Text(
+                                                    'Lessons',
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }
+
+                                      final lesson = courseInFocus!.lessons[index - 1];
+                                      final isEvenRow = (index - 1) % 2 == 0;
+
+                                      return InkWell(
+                                        onTap: () {
+                                          lessonInFocus = lesson;
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const LessonScreen()),
+                                          );
+                                        },
+                                        child: Container(
+                                          color: isEvenRow
+                                              ? const Color(0xFF393E3A)
+                                              : const Color(0xFF181D19),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Text(
+                                                    lesson.name,
+                                                    style: const TextStyle(color: Colors.white),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          );
-        },
+                      ),
+                    ],
+                  ],
+                ),
+              );
+            },
       ),
     );
   }
