@@ -169,29 +169,29 @@ class _CoursesScreenState extends State<CoursesScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Row(
+                          Row(
                             children: <Widget>[
-                              Icon(
+                              const Icon(
                                 Icons.star,
                                 color: Color(0xFF04F781),
                               ),
-                              SizedBox(width: 5),
-                              Text(
+                              const SizedBox(width: 5),
+                              const Text(
                                 '??',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold
                                 ),
                               ),
-                              SizedBox(width: 15),
-                              Icon(
+                              const SizedBox(width: 15),
+                              const Icon(
                                 Icons.video_collection_rounded,
                                 color: Color(0xFF04F781),
                               ),
-                              SizedBox(width: 5),
+                              const SizedBox(width: 5),
                               Text(
-                                '??',
-                                style: TextStyle(
+                                '${course.lessons.length}',
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold
                                 ),
